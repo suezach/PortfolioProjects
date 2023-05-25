@@ -1,5 +1,15 @@
+-- Data Cleaning and preprocessing with SQL
+-- 1. Standarize sales date format
+-- 2. Populate Address data
+-- 3. Break PropertyAddress into individual columns (Address, City, State)
+-- 4. Change Y and N in the column SoldAsVacant
+-- 5. Remove Duplicates
+-- 6. Delete Unused Columns
+
 /* Cleaning Data in SQL Queries */
 --------------------------------------------------------------------------------------------------------------------------------
+-- 1. Standarize sales date format
+
 Select *
 from PortfolioProject..NashvilleHousing
 
@@ -17,7 +27,7 @@ From PortfolioProject..NashvilleHousing
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
---Populate Property Address Field
+-- 2. Populate Property Address Field
 
 Select *
 From PortfolioProject..NashvilleHousing
@@ -47,7 +57,7 @@ where PropertyAddress is null
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
---Breaking out PropertyAddress into Individual Column(Address, City, State)
+-- 3. Breaking out PropertyAddress into Individual Column(Address, City, State)
 
 
 Select 
@@ -108,7 +118,7 @@ SET OwnersplitState = PARSENAME(Replace(OwnerAddress, ',', '.'), 1)
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
---Change Y and N to Yes and No in 'Sold as Vacant' field
+-- 4. Change Y and N to Yes and No in 'SoldAsVacant' field
 
 select distinct(SoldAsVacant), count(SoldAsvacant) 
 from PortfolioProject..NashvilleHousing  -- There are rows with 'N' and 'Y' , which need to be replaced by 'No' and 'Yes'
@@ -134,7 +144,8 @@ Set SoldAsVacant = CASE when SoldAsVacant = 'Y' then 'Yes'
 
 --------------------------------------------------------------------------------------------------------------------------------
 
---Remove Duplicates, we write a CTE 
+-- 5. Remove Duplicates, we write a CTE 
+
 WITH RowNumCTE AS(
 select *,
     ROW_NUMBER() OVER (
@@ -175,7 +186,7 @@ where row_num > 1
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
---Delete Unused Columns
+-- 6. Delete Unused Columns
 
 Alter table PortfolioProject.dbo.NashvilleHousing
 DROP COLUMN OwnerAddress, TaxDistrict, PropertyAddress
